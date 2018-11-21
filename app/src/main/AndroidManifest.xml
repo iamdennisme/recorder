@@ -17,6 +17,8 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".mvp.view.activity.HistoryActivity"
+                  android:screenOrientation="portrait"/>
         <service android:name=".service.RecorderService"/>
     </application>
 </manifest>

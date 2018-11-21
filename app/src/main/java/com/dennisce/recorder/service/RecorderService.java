@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.dennisce.recorder.base.Const;
 import com.dennisce.recorder.R;
 import com.dennisce.recorder.receiver.RecordReceiverEnum;
-import com.dennisce.recorder.tools.IO.RecorderDbHelper;
+import com.dennisce.recorder.tools.io.RecorderDbHelper;
 
 
 import java.io.File;
@@ -29,8 +29,7 @@ public class RecorderService extends Service {
 
     private String mFileName = null;
     private String mFilePath = null;
-    private static final String TYPE = ".mp4";
-    private static final String RECORD_FILE = "CoolRecorder";
+
 
     private MediaRecorder mRecorder = null;
 
@@ -64,7 +63,7 @@ public class RecorderService extends Service {
         mTeleManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
         //创建数据库工具
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" +
-                RECORD_FILE;
+                Const.RECORD_FILE;
         File file = new File(filePath);
         if (!file.exists()) {
             file.mkdir();
@@ -80,6 +79,7 @@ public class RecorderService extends Service {
 
     @Override
     public void onDestroy() {
+        //销毁的时候要关闭录音服务和注销广播
         if (mRecorder != null) {
             stopRecording();
             mTeleManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);//销毁监听
@@ -115,11 +115,11 @@ public class RecorderService extends Service {
         do {
             count++;
             mFileName = getString(R.string.file_name_format, mDatabase.getCount() + count) +
-                    TYPE;
+                    Const.RECORD_TYPE;
             mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
             mFilePath = mFilePath +
                     "/" +
-                    RECORD_FILE +
+                    Const.RECORD_FILE +
                     "/" +
                     mFileName;
             file = new File(mFilePath);

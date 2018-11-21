@@ -1,4 +1,4 @@
-package com.dennisce.recorder.tools.IO;
+package com.dennisce.recorder.tools.io;
 
 import android.provider.BaseColumns;
 

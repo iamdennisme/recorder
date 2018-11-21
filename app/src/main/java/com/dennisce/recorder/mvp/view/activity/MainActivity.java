@@ -3,10 +3,13 @@ package com.dennisce.recorder.mvp.view.activity;
 import android.Manifest;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.ImageView;
@@ -50,6 +53,22 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     protected void onDestroy() {
         super.onDestroy();
         presenter.onDestroy();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_history:
+                startActivity(new Intent(MainActivity.this, HistoryActivity.class));
+                break;
+        }
+        return true;
     }
 
     private void initPresenter() {

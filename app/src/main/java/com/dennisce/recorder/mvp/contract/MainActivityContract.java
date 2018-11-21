@@ -3,8 +3,8 @@ package com.dennisce.recorder.mvp.contract;
 /**
  * Create by dennis on 2018/11/21
  */
-public class MainActivityContract {
-    public interface View {
+public interface MainActivityContract {
+    interface View {
         void recordStarted();
 
         void recordStopped();
@@ -12,7 +12,7 @@ public class MainActivityContract {
         void recordFailed();
     }
 
-    public interface Presenter {
+    interface Presenter {
         void startRecord();
 
         void stopRecord();
