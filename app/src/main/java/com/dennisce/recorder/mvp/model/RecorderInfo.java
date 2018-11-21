@@ -14,6 +14,7 @@ public class RecorderInfo implements Parcelable {
     public int id;//主键
     public int length;
     public long time;
+    public PlayState playState=PlayState.STOP;
 
     public RecorderInfo() {
 

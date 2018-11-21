@@ -1,10 +1,11 @@
 package com.dennisce.recorder.mvp.view.activity;
 
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,11 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.dennisce.recorder.R;
 import com.dennisce.recorder.mvp.contract.HistoryActivityContract;
+import com.dennisce.recorder.mvp.model.PlayState;
 import com.dennisce.recorder.mvp.model.RecorderInfo;
 import com.dennisce.recorder.mvp.presenter.HistoryActivityPresenter;
 import com.dennisce.recorder.mvp.view.adapter.RecordHistoryAdapter;
 import com.dennisce.recorder.tools.recyclerview.SpacesItemDecoration;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +32,6 @@ public class HistoryActivity extends AppCompatActivity implements HistoryActivit
     private HistoryActivityPresenter presenter;
     private RecyclerView rcyHistory;
     private TextView tvEmpty;
-    private AlertDialog deleteDialog;
     private RecordHistoryAdapter adapter;
     private List<RecorderInfo> data = new ArrayList<>();
 
@@ -86,6 +88,19 @@ public class HistoryActivity extends AppCompatActivity implements HistoryActivit
                         }).create().show();
             }
         });
+        adapter.setOnLPlayListener(new RecordHistoryAdapter.OnLPlayListener() {
+            @Override
+            public void play(RecorderInfo recorderInfo) {
+                presenter.play(recorderInfo);
+
+            }
+
+            @Override
+            public void stop(RecorderInfo recorderInfo) {
+                presenter.stop(recorderInfo);
+
+            }
+        });
 
     }
 
@@ -101,6 +116,19 @@ public class HistoryActivity extends AppCompatActivity implements HistoryActivit
     public void showEmpty() {
         tvEmpty.setVisibility(View.VISIBLE);
         rcyHistory.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void changePlayState(int id, PlayState playState) {
+        for (RecorderInfo recorderInfo : data) {
+            if (recorderInfo.id == id) {
+                recorderInfo.playState = playState;
+            } else {
+                if (playState == PlayState.PLAY)
+                    recorderInfo.playState = PlayState.STOP;
+            }
+        }
+        adapter.notifyDataSetChanged();
     }
 
 }

@@ -138,7 +138,7 @@ public class RecorderService extends Service {
         //添加到数据库
         try {
             mDatabase.addRecorderInfo(mFileName, mFilePath, mRecordTimeMillis);
-            Toast.makeText(this, getString(R.string.record_success_tips, mFilePath, mRecordTimeMillis), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.record_success_tips, mFilePath), Toast.LENGTH_SHORT).show();
             postRecordState(RecordReceiverEnum.STOP);
         } catch (Exception e) {
             Log.d(RECORDER_SERVICE_TAG, "exception", e);
