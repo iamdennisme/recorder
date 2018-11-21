@@ -65,7 +65,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_history:
-                startActivity(new Intent(MainActivity.this, HistoryActivity.class));
+                if (checkAudioAndExternalPermission()) {
+                    //历史记录必须要有SD卡读取权限，这里一并请求了
+                    startActivity(new Intent(MainActivity.this, HistoryActivity.class));
+                } else {
+                    requestPermission();
+                }
                 break;
         }
         return true;
