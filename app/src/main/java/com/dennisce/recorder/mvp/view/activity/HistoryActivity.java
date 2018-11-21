@@ -1,9 +1,12 @@
 package com.dennisce.recorder.mvp.view.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +29,7 @@ public class HistoryActivity extends AppCompatActivity implements HistoryActivit
     private HistoryActivityPresenter presenter;
     private RecyclerView rcyHistory;
     private TextView tvEmpty;
+    private AlertDialog deleteDialog;
     private RecordHistoryAdapter adapter;
     private List<RecorderInfo> data = new ArrayList<>();
 
@@ -54,6 +58,32 @@ public class HistoryActivity extends AppCompatActivity implements HistoryActivit
         rcyHistory.setAdapter(adapter);
         rcyHistory.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         rcyHistory.addItemDecoration(new SpacesItemDecoration(18, RecyclerView.VERTICAL, R.color.grey));
+        adapter.setOnLongClickListener(new RecordHistoryAdapter.OnLongClickListener() {
+            @Override
+            public void longClick(final int position) {
+                new AlertDialog.Builder(HistoryActivity.this)
+                        .setTitle(getString(R.string.delete))
+                        .setMessage(getString(R.string.delete_sure))
+                        .setCancelable(true)
+                        .setPositiveButton(getString(R.string.sure), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                presenter.delete(data.get(position));//删除数据库和本地数据
+                                //修改显示数据
+                                data.remove(position);
+                                adapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).create().show();
+            }
+        });
+
     }
 
     @Override

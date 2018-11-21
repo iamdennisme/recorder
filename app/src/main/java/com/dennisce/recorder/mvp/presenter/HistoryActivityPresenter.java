@@ -39,7 +39,7 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
         new Thread(new Runnable() {
             @Override
             public void run() {
-                //从数据库取出信息和本地文件做比照，移出已经在本地被删除的文件记录
+                //从数据库取出信息和本地文件做比照，移除已经在本地被删除的文件记录
                 List<RecorderInfo> dbInfo = db.getAllItem();
                 List<String> allRealFile = getAllFileName();
                 ArrayList data = new ArrayList();
@@ -49,7 +49,7 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
                             data.add(recorderInfo);
                             break;
                         }
-                        db.removeRecorderInfoInfoWithId(recorderInfo.id);
+                        db.removeRecorderInfoInfoWithId(recorderInfo.id);//移出数据库记录
                     }
                 }
                 Message msg = new Message();
@@ -60,7 +60,12 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
         }).run();
     }
 
-    private List<String> getAllFileName() {
+    @Override
+    public void delete(RecorderInfo recorderInfo) {
+
+    }
+
+    private List<String> getAllFileName() {//获取本地有的路径
         List<String> allFile = new ArrayList<>();
         String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + RECORD_FILE;
         File rootFile = new File(path);

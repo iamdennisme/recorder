@@ -16,5 +16,7 @@ public interface HistoryActivityContract {
 
     interface Presenter {
         void getRecordHistory();
+
+        void delete(RecorderInfo recorderInfo);
     }
 }

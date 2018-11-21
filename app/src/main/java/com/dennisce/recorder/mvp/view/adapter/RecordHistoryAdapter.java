@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.dennisce.recorder.R;
 import com.dennisce.recorder.mvp.model.RecorderInfo;
+import com.dennisce.recorder.tools.FormatDateTools;
 
 
 import java.util.List;
@@ -24,6 +25,12 @@ public class RecordHistoryAdapter extends RecyclerView.Adapter<RecordHistoryAdap
         this.data = data;
     }
 
+    private OnLongClickListener mOnLongClickListener = null;
+
+    public void setOnLongClickListener(OnLongClickListener listener) {
+        mOnLongClickListener = listener;
+    }
+
     @NonNull
     @Override
     public RecordHistoryHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -32,10 +39,19 @@ public class RecordHistoryAdapter extends RecyclerView.Adapter<RecordHistoryAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecordHistoryHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecordHistoryHolder holder, final int position) {
         RecorderInfo item = data.get(position);
-        holder.tvName.setText(item.name + " " + item.length);
-        holder.tvTime.setText(item.time+"");
+        holder.tvName.setText(item.name + "   " + FormatDateTools.formatDate(item.length, "mm分:ss秒"));
+        holder.tvTime.setText(FormatDateTools.formatDate(item.time, "yyyy-mm-dd hh:mm:ss"));
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mOnLongClickListener != null) {
+                    mOnLongClickListener.longClick(position);
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -54,6 +70,10 @@ public class RecordHistoryAdapter extends RecyclerView.Adapter<RecordHistoryAdap
             tvName = itemView.findViewById(R.id.tv_name);
             tvTime = itemView.findViewById(R.id.tv_time);
         }
+    }
+
+    public interface OnLongClickListener {
+        void longClick(int position);
     }
 }
 

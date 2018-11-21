@@ -44,12 +44,12 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy() {//销毁时要停止录制，取消注册
         stopRecord();
         activity.unregisterReceiver(recordReceiver);
     }
 
-    public class RecordReceiver extends BroadcastReceiver {
+    public class RecordReceiver extends BroadcastReceiver {//广播接受当前状态
         @Override
         public void onReceive(Context context, Intent intent) {
             RecordReceiverEnum recordReceiverEnum = (RecordReceiverEnum) intent.getSerializableExtra(Const.RECORD_STATE);

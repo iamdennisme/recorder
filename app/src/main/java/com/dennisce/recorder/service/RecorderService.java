@@ -41,6 +41,7 @@ public class RecorderService extends Service {
 
     private TelephonyManager mTeleManager;
 
+    //通话监听
     private final PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
         @Override
         public void onCallStateChanged(int state, String incomingNumber) {
@@ -61,13 +62,14 @@ public class RecorderService extends Service {
         //创建通话监听
         mTeleManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         mTeleManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-        //创建数据库工具
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" +
                 Const.RECORD_FILE;
         File file = new File(filePath);
         if (!file.exists()) {
             file.mkdir();
         }
+
+        //创建数据库工具
         mDatabase = RecorderDbHelper.getInstance(getApplicationContext());
     }
 
@@ -79,7 +81,7 @@ public class RecorderService extends Service {
 
     @Override
     public void onDestroy() {
-        //销毁的时候要关闭录音服务和注销广播
+        //销毁的时候要关闭录音服务和注销通话状态广播
         if (mRecorder != null) {
             stopRecording();
             mTeleManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_NONE);//销毁监听
