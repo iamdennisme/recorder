@@ -6,6 +6,7 @@ import android.os.Message;
 import com.dennisce.recorder.mvp.contract.HistoryActivityContract;
 import com.dennisce.recorder.mvp.model.RecorderInfo;
 import com.dennisce.recorder.mvp.view.activity.HistoryActivity;
+import com.dennisce.recorder.tools.io.FileTools;
 import com.dennisce.recorder.tools.io.RecorderDbHelper;
 
 import java.io.File;
@@ -41,14 +42,15 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
             public void run() {
                 //从数据库取出信息和本地文件做比照，移除已经在本地被删除的文件记录
                 List<RecorderInfo> dbInfo = db.getAllItem();
-                List<String> allRealFile = getAllFileName();
+                List<String> allRealFile = FileTools.getAllRecorderInfo();
                 ArrayList data = new ArrayList();
                 for (RecorderInfo recorderInfo : dbInfo) {
                     for (String path : allRealFile) {
                         if (path.equals(recorderInfo.filePath)) {
                             data.add(recorderInfo);
-                            break;
                         }
+                    }
+                    if (!data.contains(recorderInfo)) {
                         db.removeRecorderInfoInfoWithId(recorderInfo.id);//移出数据库记录
                     }
                 }
@@ -61,22 +63,14 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
     }
 
     @Override
-    public void delete(RecorderInfo recorderInfo) {
-
-    }
-
-    private List<String> getAllFileName() {//获取本地有的路径
-        List<String> allFile = new ArrayList<>();
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + RECORD_FILE;
-        File rootFile = new File(path);
-        File[] files = rootFile.listFiles();
-        if (files == null) {
-            return allFile;
-        }
-        for (File file : files) {
-            allFile.add(file.getAbsolutePath());
-        }
-        return allFile;
+    public void delete(final RecorderInfo recorderInfo) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                db.removeRecorderInfoInfoWithId(recorderInfo.id);//移出数据库记录
+                FileTools.deleteFile(recorderInfo.filePath);
+            }
+        }).run();
     }
 
     private static class RecordHistoryHandler extends Handler {

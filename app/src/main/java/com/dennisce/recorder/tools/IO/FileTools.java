@@ -13,33 +13,24 @@ import static com.dennisce.recorder.base.Const.RECORD_FILE;
  * Create by dennis on 2018/11/21
  */
 public class FileTools {
-    public static List<RecorderInfo> getAllRecorderInfo() {
-        List<RecorderInfo> allFile = new ArrayList<>();
+    public static List<String> getAllRecorderInfo() {
+        List<String> allFile = new ArrayList<>();
         String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + RECORD_FILE;
         File rootFile = new File(path);
         File[] files = rootFile.listFiles();
+        if (!rootFile.exists()) {
+            return allFile;
+        }
         if (files == null) {
             return allFile;
         }
         for (File file : files) {
-            RecorderInfo recorderInfo = new RecorderInfo();
-            recorderInfo.name = file.getAbsolutePath();
-            recorderInfo.filePath = file.getPath();
-            allFile.add(recorderInfo);
+            allFile.add(file.getAbsolutePath());
         }
         return allFile;
     }
 
-    public static int getFileCount() {
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + RECORD_FILE;
-        File rootFile = new File(path);
-        if (!rootFile.exists()) {
-            return 0;
-        }
-        File[] files = rootFile.listFiles();
-        if (files == null) {
-            return 0;
-        }
-        return files.length;
+    public static boolean deleteFile(String path) {
+        return new File(path).delete();
     }
 }

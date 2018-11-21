@@ -73,6 +73,9 @@ public class HistoryActivity extends AppCompatActivity implements HistoryActivit
                                 //修改显示数据
                                 data.remove(position);
                                 adapter.notifyDataSetChanged();
+                                if (data.isEmpty()) {
+                                    showEmpty();
+                                }
                             }
                         })
                         .setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
