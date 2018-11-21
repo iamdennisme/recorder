@@ -33,6 +33,7 @@ public class RecorderDbHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "recorder.db";
 
     private static final int DATABASE_VERSION = 1;
+    private SQLiteDatabase sqlDb;
 
     @Override
     public void onCreate(SQLiteDatabase db) {
@@ -46,6 +47,7 @@ public class RecorderDbHelper extends SQLiteOpenHelper {
 
     private RecorderDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        sqlDb = getWritableDatabase();
         mContext = context;
     }
 
@@ -57,7 +59,7 @@ public class RecorderDbHelper extends SQLiteOpenHelper {
                 RecorderDBUtil.COLUMN_NAME_RECORD_INFO_LENGTH,
                 RecorderDBUtil.COLUMN_NAME_RECORD_INFO_CREATE_TIME
         };
-        Cursor cursor = getReadableDatabase().query(RecorderDBUtil.TABLE_NAME, projection, null, null, null, null, null, null);
+        Cursor cursor = sqlDb.query(RecorderDBUtil.TABLE_NAME, projection, null, null, null, null, null, null);
         List<RecorderInfo> list = new ArrayList<>();
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
@@ -68,7 +70,6 @@ public class RecorderDbHelper extends SQLiteOpenHelper {
                 item.filePath = (cursor.getString(cursor.getColumnIndex(RecorderDBUtil.COLUMN_NAME_RECORD_INFO_PATH)));
                 item.length = (cursor.getInt(cursor.getColumnIndex(RecorderDBUtil.COLUMN_NAME_RECORD_INFO_LENGTH)));
                 item.time = (cursor.getLong(cursor.getColumnIndex(RecorderDBUtil.COLUMN_NAME_RECORD_INFO_CREATE_TIME)));
-                cursor.close();
                 list.add(item);
                 //移动到下一位
                 cursor.moveToNext();
@@ -79,28 +80,25 @@ public class RecorderDbHelper extends SQLiteOpenHelper {
     }
 
     public void removeRecorderInfoInfoWithId(int id) {
-        SQLiteDatabase db = getWritableDatabase();
         String[] whereArgs = {String.valueOf(id)};
-        db.delete(RecorderDBUtil.TABLE_NAME, "_ID=?", whereArgs);
+        sqlDb.delete(RecorderDBUtil.TABLE_NAME, "_ID=?", whereArgs);
     }
 
     public int getCount() {
-        SQLiteDatabase db = getReadableDatabase();
         String[] projection = {RecorderDBUtil._ID};
-        Cursor c = db.query(RecorderDBUtil.TABLE_NAME, projection, null, null, null, null, null);
+        Cursor c = sqlDb.query(RecorderDBUtil.TABLE_NAME, projection, null, null, null, null, null);
         int count = c.getCount();
         c.close();
         return count;
     }
 
     public long addRecorderInfo(String recordingName, String filePath, long length) {
-        SQLiteDatabase db = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(RecorderDBUtil.COLUMN_NAME_RECORD_INFO_NAME, recordingName);
         cv.put(RecorderDBUtil.COLUMN_NAME_RECORD_INFO_PATH, filePath);
         cv.put(RecorderDBUtil.COLUMN_NAME_RECORD_INFO_LENGTH, length);
-        cv.put(RecorderDBUtil.COLUMN_NAME_RECORD_INFO_PATH, System.currentTimeMillis());
-        long rowId = db.insert(RecorderDBUtil.TABLE_NAME, null, cv);
+        cv.put(RecorderDBUtil.COLUMN_NAME_RECORD_INFO_CREATE_TIME, System.currentTimeMillis());
+        long rowId = sqlDb.insert(RecorderDBUtil.TABLE_NAME, null, cv);
         return rowId;
     }
 

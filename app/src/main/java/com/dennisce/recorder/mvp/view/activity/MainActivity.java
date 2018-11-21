@@ -80,16 +80,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         mIvRecord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog();
                 if (!isRecording) {
                     if (!checkAudioAndExternalPermission()) {
                         //没有权限就请求权限
                         requestPermission();
                         return;
                     }
+                    showDialog();
                     presenter.startRecord();
                     return;
                 }
+                showDialog();
                 presenter.stopRecord();
             }
         });

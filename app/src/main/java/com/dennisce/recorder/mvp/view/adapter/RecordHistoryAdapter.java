@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dennisce.recorder.R;
 import com.dennisce.recorder.mvp.model.RecorderInfo;
 
-import java.util.ArrayList;
+
 import java.util.List;
 
 /**

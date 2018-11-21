@@ -42,13 +42,14 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
                 //从数据库取出信息和本地文件做比照，移出已经在本地被删除的文件记录
                 List<RecorderInfo> dbInfo = db.getAllItem();
                 List<String> allRealFile = getAllFileName();
-                ArrayList data =new ArrayList();
+                ArrayList data = new ArrayList();
                 for (RecorderInfo recorderInfo : dbInfo) {
-                    for (String name : allRealFile) {
-                        if (name.equals(recorderInfo.name)) {
+                    for (String path : allRealFile) {
+                        if (path.equals(recorderInfo.filePath)) {
                             data.add(recorderInfo);
                             break;
                         }
+                        db.removeRecorderInfoInfoWithId(recorderInfo.id);
                     }
                 }
                 Message msg = new Message();
@@ -76,6 +77,7 @@ public class HistoryActivityPresenter implements HistoryActivityContract.Present
     private static class RecordHistoryHandler extends Handler {
         //弱引用
         private final WeakReference<HistoryActivity> mActivity;
+
         RecordHistoryHandler(HistoryActivity activity) {
             mActivity = new WeakReference<>(activity);
         }
