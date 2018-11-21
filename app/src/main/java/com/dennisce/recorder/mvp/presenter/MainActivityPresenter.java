@@ -45,6 +45,7 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
 
     @Override
     public void onDestroy() {
+        stopRecord();
         activity.unregisterReceiver(recordReceiver);
     }
 
@@ -55,12 +56,15 @@ public class MainActivityPresenter implements MainActivityContract.Presenter {
             switch (recordReceiverEnum) {
                 case FAIL: {
                     mView.recordFailed();
+                    break;
                 }
                 case STOP: {
                     mView.recordStopped();
+                    break;
                 }
                 case START: {
                     mView.recordStarted();
+                    break;
                 }
             }
         }

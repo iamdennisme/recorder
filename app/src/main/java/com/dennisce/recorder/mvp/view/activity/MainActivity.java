@@ -46,6 +46,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         initPresenter();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
+    }
+
     private void initPresenter() {
         presenter = new MainActivityPresenter(this);
     }
