@@ -12,4 +12,5 @@
     <string name="sure">确定</string>
     <string name="no">不要</string>
     <string name="play_err">播放失败</string>
+    <string name="in_preparation">准备中</string>
 </resources>

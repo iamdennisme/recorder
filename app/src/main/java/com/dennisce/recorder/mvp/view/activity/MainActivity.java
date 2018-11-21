@@ -98,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityContr
         mChronometer.setBase(SystemClock.elapsedRealtime());
         loadingDialog = new ProgressDialog(this);
         loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        loadingDialog.setTitle(getString(R.string.in_preparation));
     }
 
     private void showDialog() {
