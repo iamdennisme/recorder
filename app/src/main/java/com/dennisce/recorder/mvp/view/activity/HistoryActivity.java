@@ -44,6 +44,12 @@ public class HistoryActivity extends AppCompatActivity implements HistoryActivit
         initData();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.onDestroy();
+    }
+
     private void initData() {
         presenter.getRecordHistory();
     }
