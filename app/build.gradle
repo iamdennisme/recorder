@@ -16,10 +16,19 @@ android {
     }
     buildTypes {
         release {
+            shrinkResources true
+            //代码压缩
+            minifyEnabled true
+            //zip 对齐
+            zipAlignEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 dependencies {
